@@ -1,0 +1,9 @@
+<h1>Hello, <%= @user.email %>!</h1>
+
+<p>Click the link below to securely log in to your account. This link will expire shortly.</p>
+
+<p>
+  <%= link_to "Log In Now", magic_login_url(token: @attempt.magic_token) %>
+</p>
+
+<p>If you didn't request this, you can safely ignore this email.</p>

@@ -1,0 +1,5 @@
+enforce_dependencies: true
+enforce_privacy: true
+
+# This explicitly defines the 'public' folder as the gateway to the pack
+public_path: app/public

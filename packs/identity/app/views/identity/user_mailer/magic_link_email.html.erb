@@ -1,0 +1,7 @@
+<h1>Login to Your Account</h1>
+<p>Hello <%= @email %>,</p>
+<p>Click the link below to log in. This link will expire in 15 minutes.</p>
+
+<%= link_to 'Log in to my account', @magic_link_url, style: "padding: 10px 20px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px;" %>
+
+<p>If you didn't request this, you can safely ignore this email.</p>
