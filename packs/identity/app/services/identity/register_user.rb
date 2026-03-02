@@ -6,8 +6,6 @@ module Identity
       @params = params
     end
 
-    protected
-
     def call
       result = nil
 

@@ -56,3 +56,6 @@ group :development, :test do
 end
 
 gem "jwt"
+
+gem "rack-cors"
+

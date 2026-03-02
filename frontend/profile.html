@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>FAS | Dashboard</title>
+</head>
+<body class="bg-slate-50 min-h-screen">
+    <nav class="bg-white shadow-sm p-4 mb-8 border-b">
+        <div class="max-w-4xl mx-auto flex justify-between items-center">
+            <span class="font-bold text-blue-600 text-lg">FAS Identity</span>
+            <button id="logout-btn" class="text-sm font-medium text-red-500 hover:text-red-700">Logout</button>
+        </div>
+    </nav>
+
+    <main class="max-w-4xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-8">
+        <section class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+            <h2 class="text-xl font-bold mb-4 text-slate-800">User Profile</h2>
+            <div id="profile-content" class="space-y-3">
+                <div class="animate-pulse bg-slate-200 h-4 w-3/4 rounded"></div>
+                <div class="animate-pulse bg-slate-200 h-4 w-1/2 rounded"></div>
+            </div>
+        </section>
+
+        <section class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+            <h2 class="text-xl font-bold mb-4 text-slate-800">Security Settings</h2>
+            <form id="password-form" class="space-y-4">
+                <input type="password" name="current_password" placeholder="Current Password" class="w-full border p-2 rounded text-sm" required>
+                <input type="password" name="password" placeholder="New Password" class="w-full border p-2 rounded text-sm" required>
+                <input type="password" name="password_confirmation" placeholder="Confirm New Password" class="w-full border p-2 rounded text-sm" required>
+                <button type="submit" class="w-full bg-slate-800 text-white p-2 rounded text-sm font-semibold hover:bg-slate-700">
+                    Update Password
+                </button>
+            </form>
+            <p id="password-msg" class="mt-2 text-xs text-center"></p>
+        </section>
+    </main>
+
+    <script type="module">
+        import { apiRequest } from './src/api.js';
+
+        // 1. Fetch Profile on Load: Uses FetchUserProfile service on backend
+        async function loadProfile() {
+            const result = await apiRequest("/profile");
+            if (result.data) {
+                document.getElementById('profile-content').innerHTML = `
+                    <p class="text-sm text-slate-600"><strong>Email:</strong> ${result.data.email}</p>
+                    <p class="text-sm text-slate-600"><strong>Internal ID:</strong> ${result.data.id}</p>
+                    <p class="text-sm text-slate-600"><strong>Account Created:</strong> ${new Date(result.data.created_at).toLocaleDateString()}</p>
+                `;
+            }
+        }
+
+        // 2. Change Password Logic: Uses ChangePassword service on backend
+        document.getElementById('password-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const msg = document.getElementById('password-msg');
+            const formData = new FormData(e.target);
+            const body = Object.fromEntries(formData);
+
+            const res = await apiRequest("/profile/change_password", {
+                method: "PATCH",
+                body: JSON.stringify(body)
+            });
+
+            if (res.message) {
+                msg.className = "mt-2 text-xs text-center text-green-600";
+                msg.textContent = res.message;
+                e.target.reset();
+            } else {
+                msg.className = "mt-2 text-xs text-center text-red-600";
+                msg.textContent = res.errors?.join(", ") || "Failed to update password";
+            }
+        });
+
+        // 3. Logout (SessionsController#destroy)
+        document.getElementById('logout-btn').addEventListener('click', async () => {
+            const refresh_token = localStorage.getItem("refresh_token");
+            
+            // Call LogoutUser service
+            await apiRequest("/logout", {
+                method: "DELETE",
+                body: JSON.stringify({ refresh_token })
+            });
+
+            localStorage.clear();
+            window.location.href = "/index.html";
+        });
+
+        loadProfile();
+    </script>
+</body>
+</html>

@@ -33,7 +33,6 @@ module Identity
       callback = ->(payload) { queue << payload }
 
       # 2. Pass the channel AND the callback as arguments
-      # This fixes the ArgumentError (given 1, expected 2..3)
       subscriber = ActionCable.server.pubsub.subscribe(channel, callback)
 
       begin

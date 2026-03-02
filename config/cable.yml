@@ -4,6 +4,7 @@
 # to make the web console appear.
 development:
   adapter: solid_cable
+  message_retention: 1.day
 
 test:
   adapter: test

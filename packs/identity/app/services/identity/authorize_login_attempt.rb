@@ -1,25 +1,29 @@
 # packs/identity/app/services/identity/authorize_login_attempt.rb
 module Identity
   class AuthorizeLoginAttempt < ::Core::BaseService
-    def initialize(token)
+    def initialize(token, metadata)
       @token = token
+      @metadata = metadata
     end
 
     def call
       attempt = LoginAttempt.find_by(magic_token: @token, status: :pending)
       return failure("Invalid Link") unless attempt
+      
+      result = Identity::GenerateUserSession.call(user: attempt.user, metadata: @metadata)
+      if result.success?
+        attempt.update!(status: :authorized)
 
-      access_token = SecureRandom.hex(40)
-
-      if attempt.update(status: :authorized, access_token: access_token)
-        # Broadcast the success to Solid Cable
+        # Broadcast to Solid Cable / EventBus
         ::Core::EventBus.publish("login_#{attempt.external_id}", {
-          token: access_token,
-          status: "success"
+          status: "success",
+          token: result.data[:access_token],       # Valid JWT
+          refresh_token: result.data[:refresh_token] # For persistent sessions
         })
+
         success(attempt)
       else
-        failure(attempt.errors.full_messages)
+        failure("Session generation failed")
       end
     end
   end
