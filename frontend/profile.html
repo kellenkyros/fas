@@ -1,0 +1,56 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>FAS | Dashboard</title>
+</head>
+<body class="bg-slate-50 min-h-screen">
+    <nav class="bg-white shadow-sm p-4 mb-8 border-b">
+        <div class="max-w-4xl mx-auto flex justify-between items-center">
+            <span class="font-bold text-blue-600 text-lg">FAS Identity</span>
+            <button id="logout-btn" class="text-sm font-medium text-red-500 hover:text-red-700">Logout</button>
+        </div>
+    </nav>
+
+    <main class="max-w-4xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-8">
+        <section class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+            <h2 class="text-xl font-bold mb-4 text-slate-800">User Profile</h2>
+            <div id="profile-content" class="space-y-3">
+                <!-- <div class="animate-pulse bg-slate-200 h-4 w-3/4 rounded"></div> -->
+                <!-- <div class="animate-pulse bg-slate-200 h-4 w-1/2 rounded"></div> -->
+            </div>
+        </section>
+
+        <div class="space-y-8">
+            <section class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+                <h2 class="text-xl font-bold mb-4 text-slate-800">Change Password</h2>
+                <form id="password-form" class="space-y-4">
+                    <!-- <input type="password" name="current_password" placeholder="Current Password" class="w-full border p-2 rounded text-sm" required> -->
+                    <input type="password" name="password" placeholder="New Password" class="w-full border p-2 rounded text-sm" required>
+                    <input type="password" name="password_confirmation" placeholder="Confirm New Password" class="w-full border p-2 rounded text-sm" required>
+                    <button type="submit" class="w-full bg-slate-800 text-white p-2 rounded text-sm font-semibold hover:bg-slate-700 transition">
+                        Update Password
+                    </button>
+                </form>
+                <p id="password-msg" class="mt-2 text-xs text-center"></p>
+            </section>
+
+            <section id="passkey-section" class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+                <h2 class="text-xl font-bold mb-2 text-slate-800">Passkeys</h2>
+                <p class="text-xs text-slate-500 mb-4">Register your device to log in securely using biometrics (TouchID/FaceID).</p>
+                
+                <button id="register-passkey-btn" class="w-full border border-blue-600 text-blue-600 p-2 rounded text-sm font-semibold hover:bg-blue-50 transition flex items-center justify-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clip-rule="evenodd" />
+                    </svg>
+                    Register This Device
+                </button>
+                <p id="passkey-msg" class="mt-2 text-xs text-center"></p>
+            </section>
+        </div>
+    </main>
+    <script type="module" src="/src/profile.js"></script>
+</body>
+</html>

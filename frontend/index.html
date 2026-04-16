@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>FAS - Secure Login</title>
+</head>
+<body class="bg-slate-50 min-h-screen flex items-center justify-center">
+    
+    <div id="login-box" class="bg-white p-8 rounded-xl shadow-lg w-full max-w-md">
+        <h1 class="text-2xl font-bold text-center mb-6">Welcome</h1>
+        
+        <form id="auth-form" class="space-y-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Email</label>
+                <input type="email" name="email" id="email" class="w-full border border-slate-300 p-2 rounded focus:ring-2 focus:ring-blue-500 outline-none" required>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Password</label>
+                <input type="password" name="password" id="password" class="w-full border border-slate-300 p-2 rounded focus:ring-2 focus:ring-blue-500 outline-none">
+            </div>
+            
+            <div class="grid grid-cols-2 gap-4 pt-2">
+                <button type="submit" data-mode="login" class="bg-blue-600 text-white p-2 rounded font-semibold hover:bg-blue-700 transition">Login</button>
+                <button type="submit" data-mode="signup" class="border border-blue-600 text-blue-600 p-2 rounded hover:bg-blue-50 transition">Sign Up</button>
+            </div>
+        </form>
+
+        <div class="relative my-6">
+            <div class="absolute inset-0 flex items-center"><span class="w-full border-t border-gray-300"></span></div>
+            <div class="relative flex justify-center text-sm"><span class="px-2 bg-white text-gray-500">Or continue with</span></div>
+        </div>
+
+        <div class="space-y-3">
+            <button id="passkey-login" class="w-full flex items-center justify-center gap-2 bg-slate-900 text-white p-2 rounded font-medium hover:bg-black transition">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M18 8a6 6 0 01-7.743 5.743L10 14l-1 1-1 1H6v2H2v-4l4.257-4.257A6 6 0 1118 8zm-6-4a1 1 0 100 2 2 2 0 012 2 1 1 0 102 0 4 4 0 00-4-4z" clip-rule="evenodd" />
+                </svg>
+                Sign in with Passkey
+            </button>
+
+            <button type="submit" form="auth-form" data-mode="magic" class="w-full text-sm text-blue-600 hover:underline">
+                Send a Magic Link to my email
+            </button>
+        </div>
+    </div>
+
+    <div id="waiting-box" class="hidden text-center bg-white p-8 rounded-xl shadow-lg w-full max-w-md">
+        <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-600 mx-auto"></div>
+        <h2 class="text-xl font-bold mt-4">Check your email</h2>
+        <p class="text-gray-500 mt-2">We sent a secure link to your inbox.<br>Waiting for mobile authorization...</p>
+        <button onclick="window.location.reload()" class="mt-6 text-sm text-gray-400 hover:text-gray-600">Cancel</button>
+    </div>
+
+    <script type="module" src="/src/main.js"></script>
+</body>
+</html>
+

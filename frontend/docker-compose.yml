@@ -1,0 +1,14 @@
+---
+name: fas
+services:
+  frontend:
+    build:
+      context: . # Current directory
+      dockerfile: Dockerfile
+    container_name: fas-frontend
+    volumes:
+      - ".:/app" # Map current folder to /app in container
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_URL=http://localhost:3000
