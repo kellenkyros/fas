@@ -31,8 +31,6 @@
 # Ignore key files for decrypting credentials and more.
 /config/*.key
 
-
-/.devcontainer
 /.github
 /.ruby-lsp
 .DS_Store
