@@ -30,11 +30,23 @@ async function loadProfileData() {
   const result = await apiRequest("/profile");
   
   if (result.data) {
-    profileContainer.innerHTML = `
-      <p class="text-sm text-slate-600"><strong>Email:</strong> ${result.data.email}</p>
-      <p class="text-sm text-slate-600"><strong>Internal ID:</strong> ${result.data.id}</p>
-      <p class="text-sm text-slate-600"><strong>Account Created:</strong> ${new Date(result.data.created_at).toLocaleDateString()}</p>
-    `;
+    // Use textContent to prevent XSS vulnerabilities
+    profileContainer.innerHTML = ""; // Clear existing
+    const details = [
+      { label: "Email", value: result.data.email },
+      { label: "Internal ID", value: result.data.id },
+      { label: "Account Created", value: new Date(result.data.created_at).toLocaleDateString() }
+    ];
+
+    details.forEach(item => {
+      const p = document.createElement("p");
+      p.className = "text-sm text-slate-600";
+      const strong = document.createElement("strong");
+      strong.textContent = `${item.label}: `;
+      p.appendChild(strong);
+      p.appendChild(document.createTextNode(item.value));
+      profileContainer.appendChild(p);
+    });
   } else {
     profileContainer.innerHTML = `<p class="text-red-500 text-sm">Error loading profile data.</p>`;
   }
@@ -128,4 +140,3 @@ window.addEventListener('DOMContentLoaded', () => {
   document.getElementById('password-form')?.addEventListener('submit', handlePasswordChange);
   document.getElementById('register-passkey-btn')?.addEventListener('click', handleRegisterPasskey);
 });
-

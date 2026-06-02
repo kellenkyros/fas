@@ -59,12 +59,10 @@ ENV BUNDLE_APP_CONFIG=.bundle
 RUN gem update --system && \
     gem install bundler
 
-# Create a directory for the app code
-RUN mkdir -p /app
+# Set the working directory for the app code (automatically creates the directory)
 WORKDIR /app
 
 # Document that we're going to expose port 3000
 EXPOSE 3000
 # Use Bash as the default command
 CMD ["/bin/bash"]
-

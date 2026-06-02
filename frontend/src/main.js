@@ -115,8 +115,10 @@ async function handleMagicLink(email) {
     document.getElementById('login-box').classList.add('hidden');
     document.getElementById('waiting-box').classList.remove('hidden');
 
-    // 1. Desktop listens for the "Ping" (SSE)
-    const sse = new EventSource(`http://localhost:3000/login_attempts/${data.attempt_id}/subscribe`);
+    // 1. Use a relative path or environment variable for the SSE connection
+    // Assuming the API base can be derived or is relative
+    const sseUrl = `http://localhost:3000/login_attempts/${data.attempt_id}/subscribe`;
+    const sse = new EventSource(sseUrl);
 
     // Listening for sse.write(message, event: "authorized")
     sse.addEventListener("authorized", (event) => {

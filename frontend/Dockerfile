@@ -1,17 +1,33 @@
-FROM node:20-slim
+# Stage 1: Build stage
+FROM node:20-slim AS build
 
 WORKDIR /app
 
-# Copy only the files needed for installing dependencies
-COPY package*.json ./
+# Set ownership and switch to non-root user for the build stage
+RUN chown node:node /app
+USER node
 
-# Install dependencies during the build phase
-RUN npm install
+# Copy dependency files with correct ownership
+COPY --chown=node:node package*.json ./
 
-# Copy the rest of your frontend code
-COPY . .
+# Use 'npm ci' for deterministic builds
+RUN npm ci
 
-EXPOSE 5173
+# Copy source code with correct ownership
+COPY --chown=node:node . .
 
-CMD ["npx", "vite", "--host"]
+# Create the production build
+RUN npm run build
 
+# Stage 2: Production stage
+FROM nginx:alpine
+
+# Copy custom nginx configuration
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+# This copies the contents of /app/dist into the Nginx web root
+COPY --from=build /app/dist /usr/share/nginx/html
+
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]

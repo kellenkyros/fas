@@ -4,22 +4,22 @@ x-app: &app
     args:
       RUBY_VERSION: '4.0.1'
       PG_MAJOR: '17'
-  image: fas-dev:1.0.0
-  working_dir: ${PWD}
+  image: fas-backend
+  working_dir: /app
   environment: &env
     RAILS_ENV: ${RAILS_ENV:-}
   tmpfs:
     - /tmp
-    - ${PWD}/tmp/pids
+    - /app/tmp/pids
 
 x-backend: &backend
   <<: *app
   stdin_open: true
   tty: true
   volumes:
-    - ${PWD}:/${PWD}:cached
+    - ..:/app:cached
     - bundle:/usr/local/bundle
-    - rails_cache:/${PWD}/tmp/cache
+    - rails_cache:/app/tmp/cache
     - history:/usr/local/hist
     - ./.psqlrc:/root/.psqlrc:ro
     - ./.bashrc:/root/.bashrc:ro
@@ -29,7 +29,7 @@ x-backend: &backend
     MALLOC_ARENA_MAX: 2
     WEB_CONCURRENCY: ${WEB_CONCURRENCY:-1}
     BOOTSNAP_CACHE_DIR: /usr/local/bundle/_bootsnap
-    XDG_DATA_HOME: /${PWD}/tmp/cache
+    XDG_DATA_HOME: /app/tmp/cache
     HISTFILE: /usr/local/hist/.bash_history
     PSQL_HISTFILE: /usr/local/hist/.psql_history
     IRB_HISTFILE: /usr/local/hist/.irb_history
@@ -60,7 +60,7 @@ services:
       PSQL_HISTFILE: /usr/local/hist/.psql_history
       POSTGRES_PASSWORD: postgres
     ports:
-      - 5432
+      - '5432:5432'
     healthcheck:
       test: pg_isready -U postgres -h 127.0.0.1
       interval: 5s
@@ -70,4 +70,3 @@ volumes:
   history:
   rails_cache:
   postgres:
-
